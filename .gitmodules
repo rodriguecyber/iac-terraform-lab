@@ -1,0 +1,3 @@
+[submodule "backend-resources-iac"]
+	path = backend-resources-iac
+	url = https://github.com/rodriguecyber/backend-resources-IaC
