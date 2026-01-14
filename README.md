@@ -31,18 +31,21 @@ Optional: WSL for Windows users or Linux/macOS terminal.
 ## Step 1: Clone the Lab Repository
 
 ```bash
-git clone <your-lab-repo-url>
-cd IaCwithterraform
+git clone https://github.com/rodriguecyber/iac-terraform-lab
+cd iac-terraform-lab
 
-Step 2: Initialize Terraform
-terraform init
+step 2: Create backend variables **backend.tfvars**
+touch backend.tfvars
+(look the variables format in ./backend.tfvars.example)
 
+Step 3: Initialize Terraform
+ terraform init -backend-config=backend.tfvars
 
 Installs required providers (AWS, TLS, Local)
 
-Uses local state by default (can be configured to S3 + DynamoDB backend)
+Uses local state by default (can be configured to S3 + DynamoDB table )
 
-No prompts appear since all values are provided in the configuration.
+No prompts appear since all values are provided in the configuration( in backend.tfvar).
 
 Step 3: Review the Plan
 terraform plan
@@ -59,7 +62,7 @@ Key Pair (generated automatically)
 EC2 Instance
 
 Step 4: Apply the Plan
-terraform apply -auto-approve
+terraform apply 
 
 
 Creates all resources automatically
@@ -70,21 +73,8 @@ Public key uploaded to AWS
 
 Private key saved locally as lab-key.pem
 
-Launches a t2.micro EC2 instance in a public subnet
+Launches a t3.micro EC2 instance in a public subnet (our sandbox does not support t2.micro ao i used t3.micro)
 
-Step 5: Access the EC2 Instance
-
-Set proper permissions on the private key:
-
-chmod 600 lab-key.pem
-
-
-SSH into the instance:
-
-ssh -i lab-key.pem ec2-user@<ec2-public-ip>
-
-
-<ec2-public-ip> is output by Terraform after apply (terraform output ec2_public_ip)
 
 Step 6: Outputs
 
@@ -96,7 +86,8 @@ public_subnet_id	ID of the public subnet
 ec2_instance_id	ID of the EC2 instance
 ec2_public_ip	Public IP of the EC2 instance
 private_key_path	Path to the private key for SSH access
-Step 7: Cleanup
+
+Step 6: Cleanup
 terraform destroy -auto-approve
 
 
@@ -104,20 +95,13 @@ Removes all resources created by this lab
 
 Deletes EC2, Key Pair, VPC, Subnet, IGW, Security Group
 
-Ensures no unnecessary AWS costs are incurred.
 
-Optional: Backend (S3 + DynamoDB)
+ Backend (S3 + DynamoDB)
 
-For collaborative environments, you can configure a remote backend:
+For collaborative environments,  configure a remote backend:
 
 terraform {
-  backend "s3" {
-    bucket         = "my-terraform-state-bucket"
-    key            = "ec2-lab/terraform.tfstate"
-    region         = "eu-north-1"
-    dynamodb_table = "terraform-lock"
-    encrypt        = true
-  }
+  backend "s3" { }
 }
 
 
@@ -127,15 +111,7 @@ DynamoDB table provides locking to prevent multiple users modifying state simult
 
 Avoids interactive prompts by using hardcoded values or -backend-config parameters
 
-Notes
-
-No manual SSH key generation is required; Terraform handles it automatically.
-
-All resources are Free Tier compatible.
-
-Terraform automatically manages dependencies (SG → Subnet → EC2).
-
-Best practice: restrict SSH access to your IP in production instead of 0.0.0.0/0.
+NB: for Backend resources IaC refer: https://github.com/rodriguecyber/backend-resources-IaC
 
 
 
