@@ -11,7 +11,7 @@ All resources are created automatically, including:
 - VPC, Subnet, Internet Gateway, Route Table  
 - Security Group allowing SSH (22) and HTTP (80)  
 - EC2 Key Pair (generated automatically by Terraform if missing)  
-- EC2 Instance (Amazon Linux 2)  
+- EC2 Instance  
 
 The Terraform configuration also saves the **private key locally** for SSH access, removing any manual steps.
 
@@ -21,7 +21,7 @@ The Terraform configuration also saves the **private key locally** for SSH acces
 
 1. **AWS Account** (Free Tier recommended)  
 2. **AWS CLI configured** with access keys (`aws configure`)  
-3. **Terraform installed** (v1.5 or later recommended)  
+3. **Terraform installed** 
 4. **Git / Terminal**  
 
 Optional: WSL for Windows users or Linux/macOS terminal.
